@@ -2,20 +2,38 @@
 #define BOARD_H
 
 #include "piece.h"
+#include "time.h"
 
 typedef struct b_case
 {
     struct piece* piece;
-    int state;
+    int state = 0;
 } b_case;
 
 typedef struct board
 {
     int width;
     int height;
+    int n_shield = 0;
+    int n_defense = 2;
+    int n_radar = 1;
+    int n_offense = 3;
+    int n_admiral = 1;
     b_case** board;
 } board;
 
+// Génère un terrain (w * h)
 board createBoard(int, int);
+// Place une piece dans le terrain
+int placePiece(piece*, board*);
 
+// Attaque dans un terrain donné
+int attack(board*, int, int);
+// Protège une piece dans un terrain donné
+int shield(board*, int, int);
+// Radar dans un terrain donné
+int radar(board*, int, int);
+
+// Liberation memoire
+void delGame(board*);
 #endif

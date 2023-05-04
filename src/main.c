@@ -4,6 +4,7 @@
 #include "board.h"
 
 int main() {
-    createBoard(20, 50);
+    srand(time(NULL));
+    
     return 0;
 }
