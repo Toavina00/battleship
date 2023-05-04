@@ -7,18 +7,18 @@
 typedef struct b_case
 {
     struct piece* piece;
-    int state = 0;
+    int state;
 } b_case;
 
 typedef struct board
 {
     int width;
     int height;
-    int n_shield = 0;
-    int n_defense = 2;
-    int n_radar = 1;
-    int n_offense = 3;
-    int n_admiral = 1;
+    int n_shield;
+    int n_defense;
+    int n_radar;
+    int n_offense;
+    int n_admiral;
     b_case** board;
 } board;
 

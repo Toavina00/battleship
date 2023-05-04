@@ -12,11 +12,17 @@ board createBoard(int w, int h) {
     board b;
     b.width = w;
     b.height = h;
+    b.n_shield = 0;
+    b.n_defense = 2;
+    b.n_radar = 1;
+    b.n_offense = 3;
+    b.n_admiral = 1;
     b.board = (b_case**) malloc(h * sizeof(b_case*));
     for (int i = 0; i < h; i++) {
         b.board[i] = (b_case*) malloc(w * sizeof(b_case));
         for (int j = 0; j < w; j++) {
             b.board[i][j].piece = NULL;
+            b.board[i][j].state = 0;
         }
     }
     return b;
@@ -170,7 +176,7 @@ int attack(board* b, int x, int y) {
 
 int shield(board* b, int x, int y) {
     if (!isIn(x, y, b)) return 0;
-    if (b->n_shield == 2) return 0;
+    if (b->n_shield == b->n_defense) return 0;
     if (b->n_defense == 0) return 0;
     if (b->board[y][x].piece != NULL) {
         if (b->board[y][x].piece->shielded) {
