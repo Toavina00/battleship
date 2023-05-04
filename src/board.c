@@ -1,5 +1,13 @@
 #include "board.h"
 
+int isIn(int x , int y, board *b){
+    return !(x < 0 || x >= b->width || y < 0 || y >= b->height);
+}
+
+int detect(int x, int y, board* b) {
+    return b->board[y][x].piece != NULL;
+}
+
 board createBoard(int w, int h) {
     board b;
     b.width = w;
@@ -15,33 +23,42 @@ board createBoard(int w, int h) {
     return b;
 }
 
+
 int placePiece(piece* p, board* b) {
-    if (p->x < 0 || p->x >= b->width || p->y < 0 || p->y >= b->height) return 0;
+    if (!isIn(p->x, p->y, b)) return 0;
     switch (p->dir)
     {
     case UP:
-        if (p->y - (p->life - 1) < 0 || b->board[p->y][p->x].piece != NULL) return 0;
+        for (int i=0 ; i<p->life ; i++){
+            if (detect(p->x , p->y - i, b)) return 0;
+        }
         for (int i = 0; i < p->life; i++) {
             b->board[p->y - i][p->x].piece = p;
         }
         break;
     
     case DOWN:
-        if (p->y + (p->life - 1) >= b->height || b->board[p->y][p->x].piece != NULL) return 0;
+        for (int i=0 ; i<p->life ; i++){
+            if (detect(p->x , p->y + i, b)) return 0;
+        }
         for (int i = 0; i < p->life; i++) {
             b->board[p->y + i][p->x].piece = p;
         }
         break;
 
     case LEFT:
-        if (p->x - (p->life - 1) < 0 || b->board[p->y][p->x].piece != NULL) return 0;
+        for (int i=0 ; i<p->life ; i++){
+            if (detect(p->x - i , p->y, b)) return 0;
+        }
         for (int i = 0; i < p->life; i++) {
             b->board[p->y][p->x - i].piece = p;
         }
         break;
 
     case RIGHT:
-        if (p->x + (p->life - 1) >= b->width || b->board[p->y][p->x].piece != NULL) return 0;
+        for (int i=0 ; i<p->life ; i++){
+            if (detect(p->x + i , p->y, b)) return 0;
+        }
         for (int i = 0; i < p->life; i++) {
             b->board[p->y][p->x + i].piece = p;
         }
@@ -62,35 +79,32 @@ void delGame(board* b) {
     free(b->board);
 }
 
-void replace(board* b, piece* p) {
+void moveAdmiral(board* b, piece* p) {
     int success = 0, x, y, d;
-    while (!success) {
-        switch (p->dir)
-        {
-        case UP: 
-            for (int i = 0; i < p->life; i++) {
-                b->board[p->y - i][p->x].piece = NULL;
-            }
-            break;
-
-        case DOWN:
-            for (int i = 0; i < p->life; i++) {
-                b->board[p->y + i][p->x].piece = NULL;
-            }
-            break;
-
-        case LEFT:
-            for (int i = 0; i < p->life; i++) {
-                b->board[p->y][p->x - i].piece = NULL;
-            }
-            break;
-
-        case RIGHT:
-            for (int i = 0; i < p->life; i++) {
-                b->board[p->y][p->x + i].piece = NULL;
-            }
-            break;
+    switch (p->dir)
+    {
+    case UP: 
+        for (int i = 0; i < p->life; i++) {
+            b->board[p->y - i][p->x].piece = NULL;
         }
+        break;
+    case DOWN:
+        for (int i = 0; i < p->life; i++) {
+            b->board[p->y + i][p->x].piece = NULL;
+        }
+        break;
+    case LEFT:
+        for (int i = 0; i < p->life; i++) {
+            b->board[p->y][p->x - i].piece = NULL;
+        }
+        break;
+    case RIGHT:
+        for (int i = 0; i < p->life; i++) {
+            b->board[p->y][p->x + i].piece = NULL;
+        }
+        break;
+    }
+    while (!success) {
         x = rand() % b->width;
         y = rand() % b->height;
         d = rand() % 4;
@@ -100,7 +114,7 @@ void replace(board* b, piece* p) {
 }
 
 int attack(board* b, int x, int y) {
-    if (x < 0 || x >= b->width || y < 0 || y >= b->height) return 0;
+    if (!isIn(x, y, b)) return 0;
     if (b->board[y][x].state == 1) return 0;
     if (b->board[y][x].piece != NULL) {
         if (b->board[y][x].piece->shielded) {
@@ -114,7 +128,7 @@ int attack(board* b, int x, int y) {
                 if (b->board[y][x].piece->life = 0) {
                     b->n_admiral--;
                 } else {
-                    replace(b, b->board[y][x].piece);
+                    moveAdmiral(b, b->board[y][x].piece);
                 }
                 break;
 
@@ -148,7 +162,7 @@ int attack(board* b, int x, int y) {
 }
 
 int shield(board* b, int x, int y) {
-    if (x < 0 || x >= b->width || y < 0 || y >= b->height) return 0;
+    if (!isIn(x, y, b)) return 0;
     if (b->n_shield == 2) return 0;
     if (b->n_defense == 0) return 0;
     if (b->board[y][x].piece != NULL) {
@@ -176,17 +190,13 @@ int shield(board* b, int x, int y) {
 }
 
 int radar(board* b, int x, int y) {
-    if (x < 0 || x >= b->width || y < 0 || y >= b->height) return 0;
+    if (!isIn(x, y, b)) return 0;
     if (b->n_radar == 0) return 0;
-    for (int i = 0; i < 2; i++) {
-        if (!(x < 0 || x >= b->width || y - i < 0 || y - i >= b->height)) 
-            if (b->board[y - i][x].piece != NULL) return 1;
-        if (!(x - i < 0 || x - i >= b->width || y < 0 || y >= b->height)) 
-            if (b->board[y][x - i].piece != NULL) return 1;
-        if (!(x < 0 || x >= b->width || y + i < 0 || y + i >= b->height)) 
-            if (b->board[y + i][x].piece != NULL) return 1;
-        if (!(x + i < 0 || x + i >= b->width || y < 0 || y >= b->height)) 
-            if (b->board[y][x + i].piece != NULL) return 1;
+    for (int i = -1; i < 2; i++) {
+        for (int j = -1; j < 2; j++) {
+            if(isIn(x + i, y + j, b) && detect(x + i, y + j, b))
+                 return 1;
+        }
     }
     return 0;
 }
