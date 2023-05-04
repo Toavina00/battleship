@@ -17,7 +17,6 @@ board createBoard(int w, int h) {
         b.board[i] = (b_case*) malloc(w * sizeof(b_case));
         for (int j = 0; j < w; j++) {
             b.board[i][j].piece = NULL;
-            b.board[i][j].state = 0;
         }
     }
     return b;
@@ -34,6 +33,7 @@ int placePiece(piece* p, board* b) {
         }
         for (int i = 0; i < p->life; i++) {
             b->board[p->y - i][p->x].piece = p;
+            b->board[p->y - i][p->x].state = 1;
         }
         break;
     
@@ -43,6 +43,7 @@ int placePiece(piece* p, board* b) {
         }
         for (int i = 0; i < p->life; i++) {
             b->board[p->y + i][p->x].piece = p;
+            b->board[p->y + i][p->x].state = 1;
         }
         break;
 
@@ -52,6 +53,7 @@ int placePiece(piece* p, board* b) {
         }
         for (int i = 0; i < p->life; i++) {
             b->board[p->y][p->x - i].piece = p;
+            b->board[p->y][p->x - i].state = 1;
         }
         break;
 
@@ -61,6 +63,7 @@ int placePiece(piece* p, board* b) {
         }
         for (int i = 0; i < p->life; i++) {
             b->board[p->y][p->x + i].piece = p;
+            b->board[p->y][p->x + i].state = 1;
         }
         break;
     }
@@ -86,21 +89,25 @@ void moveAdmiral(board* b, piece* p) {
     case UP: 
         for (int i = 0; i < p->life; i++) {
             b->board[p->y - i][p->x].piece = NULL;
+            b->board[p->y - i][p->x].state = 0;
         }
         break;
     case DOWN:
         for (int i = 0; i < p->life; i++) {
             b->board[p->y + i][p->x].piece = NULL;
+            b->board[p->y + i][p->x].state = 0;
         }
         break;
     case LEFT:
         for (int i = 0; i < p->life; i++) {
             b->board[p->y][p->x - i].piece = NULL;
+            b->board[p->y][p->x - i].state = 0;
         }
         break;
     case RIGHT:
         for (int i = 0; i < p->life; i++) {
             b->board[p->y][p->x + i].piece = NULL;
+            b->board[p->y][p->x + i].state = 0;
         }
         break;
     }
@@ -134,7 +141,7 @@ int attack(board* b, int x, int y) {
 
             case OFFENSE:
                 b->board[y][x].piece->life--;
-                b->board[y][x].state = 1;
+                b->board[y][x].state = 2;
                 if (b->board[y][x].piece->life = 0) {
                     b->n_offense--;
                 }
@@ -142,7 +149,7 @@ int attack(board* b, int x, int y) {
 
             case DEFENSE:
                 b->board[y][x].piece->life--;
-                b->board[y][x].state = 1;
+                b->board[y][x].state = 2;
                 if (b->board[y][x].piece->life = 0) {
                     b->n_defense--;
                 }
@@ -150,7 +157,7 @@ int attack(board* b, int x, int y) {
 
             case RADAR:
                 b->board[y][x].piece->life--;
-                b->board[y][x].state = 1;
+                b->board[y][x].state = 2;
                 if (b->board[y][x].piece->life = 0) {
                     b->n_radar--;
                 }
