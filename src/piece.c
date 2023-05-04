@@ -40,6 +40,6 @@ piece createAdmiral(int pos_x, int pos_y, direction _dir) {
     p.type = ADMIRAL;
     p.dir = _dir;
     p.shielded = 0;
-    p.life = 2;
+    p.life = 3;
     return p;
 }

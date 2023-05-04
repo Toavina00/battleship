@@ -1,7 +1,7 @@
 #ifndef PIECE_H
 #define PIECE_H
 
-#include <stdio.h>
+#include <stdlib.h>
 
 typedef enum Class
 {
@@ -29,4 +29,9 @@ typedef struct piece
     direction dir;
 } piece;
 
+
+piece createOffense(int, int, direction);
+piece createDefense(int, int, direction);
+piece createRadar(int, int, direction);
+piece createAdmiral(int, int, direction);
 #endif

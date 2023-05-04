@@ -13,7 +13,9 @@ typedef struct board
 {
     int width;
     int height;
-    b_case* board;
-};
+    b_case** board;
+} board;
+
+board createBoard(int, int);
 
 #endif
