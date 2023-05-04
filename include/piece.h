@@ -8,17 +8,25 @@ typedef enum Class
     OFFENSE,
     DEFENSE,
     ADMIRAL,
-    SHIELD,
+    RADAR,
 } Class;
+
+typedef enum direction
+{
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT,
+} direction;
 
 typedef struct piece
 {
     int x;
     int y;
-    int direction;
     int life;
     int shielded;
     Class type;
+    direction dir;
 } piece;
 
 #endif
