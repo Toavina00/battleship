@@ -36,5 +36,7 @@ int serverStart(int port) {
         // TODO
     }
 
+    shutdown(s_fd, SHUT_RDWR);
+
     return 0;
 }

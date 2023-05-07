@@ -23,5 +23,9 @@ int startClient(int port, const char* addr) {
     while (running) {
         // TODO
     }
+
+    
+
+    return 0;
     
 }
