@@ -2,36 +2,51 @@
 #define PIECE_H
 
 #include <stdlib.h>
+#include <time.h>
+#include <stdio.h>
+#include <ncurses.h>
 
-typedef enum Class
-{
-    OFFENSE,
-    DEFENSE,
-    ADMIRAL,
-    RADAR,
-} Class;
+#define N_SHIPS    5
+#define N_PARTS    17
+#define DIMENSION  10
 
-typedef enum direction
-{
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT,
-} direction;
+/*-------------------*/
+//  Data Structures  //
+/*-------------------*/
 
-typedef struct piece
-{
-    int x;
-    int y;
-    int life;
-    int shielded;
-    Class type;
-    direction dir;
-} piece;
+typedef enum Orientation {
+    UP, DOWN, RIGHT, LEFT
+} Orientation;
 
+typedef struct Ship {
+    int id;
+    int length;
+    int offset;
+}Ship;
 
-piece createOffense(int, int, direction);
-piece createDefense(int, int, direction);
-piece createRadar(int, int, direction);
-piece createAdmiral(int, int, direction);
+typedef struct Part {
+    int id;
+    int ownerId;
+} Part;
+
+/*-------------------*/
+//    Game Pieces    //
+/*-------------------*/
+
+static Ship SHIPS[N_SHIPS];
+static Part PARTS[N_PARTS];
+
+static int BOARD[DIMENSION][DIMENSION];
+
+/*-------------------*/
+//   Game Functions  //
+/*-------------------*/
+
+void init();
+int isOver();
+int place(int, int, int, Orientation);
+void placeRandom();
+void displayBoard(WINDOW*);
+int attack(int, int);
+
 #endif

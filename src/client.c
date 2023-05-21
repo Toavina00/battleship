@@ -19,13 +19,47 @@ int startClient(int port, const char* addr) {
         return -1;
     }
 
-    int running = 1;
-    while (running) {
-        // TODO
+    char buff[512];
+
+    initscr();
+    cbreak();
+
+    int maxX, maxY, posx, width = DIMENSION * 3 + 2, height = DIMENSION + 2;
+    getmaxyx(stdscr, maxY, maxX);
+
+    posx = (maxX - width)/2;
+    WINDOW* gWin = newwin(height, width, 0, posx);
+    WINDOW* dWin = newwin(3, width, height + 3, posx);
+    WINDOW* iWin = newwin(3, width, height + 9, posx);
+
+    box(dWin, 0, 0);
+    mvwprintw(dWin, 0, 1, "Info");
+
+    box(iWin, 0, 0);
+    mvwprintw(iWin, 0, 1, "Player");
+
+    box(gWin, 0, 0);
+    for (int i = 0; i < DIMENSION; i++) {
+        mvwprintw(gWin, 0, 1+3*i, " %c ", 'A' + i);
+    }
+    for (int i = 0; i < DIMENSION; i++) {
+        mvwprintw(gWin, 1+i, 0, "%c", '0' + i );
     }
 
-    
+    while (true) {
+        displayBoard(gWin);
 
-    return 0;
-    
+        
+        
+        wrefresh(gWin);
+        wrefresh(dWin);
+        wrefresh(iWin);
+    }
+
+    delwin(gWin);
+    delwin(dWin);
+    delwin(iWin);
+    endwin();
+
+    return 0;    
 }

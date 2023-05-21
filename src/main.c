@@ -1,10 +1,10 @@
-#include <stdio.h>
-#include <ncurses.h>
-
-#include "board.h"
+#include "client.h"
 
 int main() {
-    srand(time(NULL));
-    
+    init();
+    placeRandom();
+
+    startClient(5000, "127.0.0.1");
+
     return 0;
 }

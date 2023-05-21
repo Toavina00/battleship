@@ -4,7 +4,8 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
-#include <stdio.h>
-#include "game.h"
+#include "piece.h"
+
+int startClient(int port, const char* addr);
 
 #endif
