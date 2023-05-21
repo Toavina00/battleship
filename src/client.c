@@ -48,8 +48,6 @@ int startClient(int port, const char* addr) {
 
     while (true) {
         displayBoard(gWin);
-
-        
         
         wrefresh(gWin);
         wrefresh(dWin);
