@@ -5,6 +5,8 @@
 #include <time.h>
 #include <stdio.h>
 #include <ncurses.h>
+#include <regex.h>
+#include <string.h>
 
 #define N_SHIPS    5
 #define N_PARTS    17
