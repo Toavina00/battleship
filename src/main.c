@@ -1,18 +1,19 @@
 #include "client.h"
+#include "server.h"
 
-int main() {
-    initscr();
-    WINDOW* win = newwin(10, 10, 5, 5);
-    box(win, 0, 0);
-    wrefresh(win);
-    refresh();
-    getch();
-    mvwprintw(win, 1, 1, "Test");
-    getch();
-    wclear(win);
-    getch();
-    delwin(win);
-    endwin();
-
-    return 0;
+int main(int argc, char const *argv[])
+{
+    if (argc == 1) {
+        return -1;   
+    }
+    else if (argc == 2) {
+        return startServer(atoi(argv[1]));
+    } else if (argc == 3) {
+        if (strcmp(argv[1], "-s") == 0) return startServer(atoi(argv[2]));
+        else return -1;
+    } else if (argc == 4) {
+        if (strcmp(argv[1], "-c") == 0) return startClient(atoi(argv[3]), argv[2]);
+        else return -1;
+    } else return -1;
+    
 }

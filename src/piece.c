@@ -24,6 +24,7 @@ void init() {
             c++;
         }
     }
+
 }
 
 int getShip(int row, int col) {
@@ -46,8 +47,8 @@ int isOver() {
 }
 
 int attack(int row, int col) {
-    if (isOutOfBound(row, col) || !isFloating(row, col)) return 0;
-    if (BOARD[row][col] < 0) return 0;
+    if (isOutOfBound(row, col) ) return -1;
+    if (BOARD[row][col] < 0 || !isFloating(row, col)) return 0;
 
     int shipId = getShip(row, col);
     SHIPS[shipId].length -= 1;
@@ -103,7 +104,6 @@ void placeRandom() {
 }
 
 void displayBoard(WINDOW* win) {
-    
 
     for (int i = 0; i < DIMENSION; i++) {
         for (int j = 0; j < DIMENSION; j++) {
@@ -125,4 +125,6 @@ void displayBoard(WINDOW* win) {
             }
         }
     }
+
+    wrefresh(win);
 }
