@@ -1,23 +1,5 @@
 #include "window.h"
 
-int compRe() {
-
-    if (!regcomp(&quit, "^:q$", REG_EXTENDED | REG_ICASE)) {
-        perror("Regex compilation error");
-        return -1;
-    }
-    if (!regcomp(&win, "^:w$", REG_EXTENDED | REG_ICASE)) {
-        perror("Regex compilation error");
-        return -1;
-    }
-    if (!regcomp(&target, "^[a-j][1-9]$", REG_EXTENDED | REG_ICASE)) {
-        perror("Regex compilation error");
-        return -1;
-    }
-
-    return 0;
-}
-
 int initwin() {
 
     initscr();
@@ -49,8 +31,6 @@ int initwin() {
     wrefresh(dWin);
     refresh();
 
-    return compRe();
-
 }
 
 void clearWin(WINDOW* win) {
@@ -68,26 +48,30 @@ void wlog(char* text) {
 
 int handleInput(char* msg, int* x, int* y) {    
 
-    if (!regexec(&quit, msg, 0, NULL, 0)) 
-        return 1;
-    else if (!regexec(&win, msg, 0, NULL, 0)) 
-        return 2;
-    else if (!regexec(&target, msg, 0, NULL, 0)) {
-        if (x == NULL || y == NULL) return 0;
-        *x = msg[0];
-        *x -= (*x <= 'J')?'A':'a';
-        *y = msg[1] - '0'; 
-        return 0;
+    if (msg[2] == '\0') 
+        return -1;
+    else if (msg[0] == ':') {
+        if (msg[1] == 'q' || msg[1] == 'Q') {
+            return 1;
+        } else if (msg[1] == 'w' || msg[1] == 'W') {
+            return 2;
+        }
     }
-    else return -1;
+    else if ( (msg[0] <= 'z' && msg[0] >= 'a') || (msg[0] <= 'Z' && msg[0] >= 'A') ) 
+        if (msg[1] <= '9' && msg[1] >= '0') {
+            if (x == NULL || y == NULL) return 0;
+            *x = msg[0];
+            *x -= (*x <= 'J')?'A':'a';
+            *y = msg[1] - '0'; 
+            return 0;
+        }
+    return -1;
 }
 
 
 int getInput(char* buffer) {
     clearWin(iWin);
-    mvwin(iWin, 1, 1);
-    
-    wgetstr(iWin, buffer);
+    mvwgetstr(iWin, 1, 1, buffer);
     
     int out = handleInput(buffer, NULL, NULL);
 
