@@ -22,7 +22,7 @@ int createServer(int port)
         return -1;
     }
 
-    printf("Server started: %s:%i\n", inet_ntoa(server_addr.sin_addr), server_addr.sin_port);
+    printf("Server started: %s:%i\n", inet_ntoa(server_addr.sin_addr), ntohs(server_addr.sin_port));
 
     if (listen(s_fd, 1) < 0)
     {
@@ -54,13 +54,11 @@ int startServer(int port)
     {
         displayBoard(gWin);
         if (!pTurn())
-            goto Over;
+            break;
         displayBoard(gWin);
         if (!oTurn())
-            goto Over;
+            break;
     }
-
-Over:
 
     delwin(gWin);
     delwin(dWin);

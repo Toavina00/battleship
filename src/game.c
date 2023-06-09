@@ -4,7 +4,7 @@ int oTurn()
 {
     wlog("Waiting for the opponent");
 
-    if (recv(c_fd, buff, 16, 0) < 0)
+    if (recv(c_fd, buff, sizeof(buff), 0) < 0)
     {
         perror("Error on receiving data\n");
         return 1;
@@ -15,7 +15,7 @@ int oTurn()
     case 1:
         wlog("The opponent ended the game");
         getch();
-        return;
+        return 0;
         break;
 
     case 2:

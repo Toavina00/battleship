@@ -10,4 +10,7 @@
 static int c_fd, x, y;
 static char buff[512];
 
+int pTurn();
+int oTurn();
+
 #endif

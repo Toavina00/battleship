@@ -38,13 +38,11 @@ int startClient(int port, const char *addr)
     {
         displayBoard(gWin);
         if (!oTurn())
-            goto Over;
+            break;
         displayBoard(gWin);
         if (!pTurn())
-            goto Over;
+            break;
     }
-
-Over:
 
     delwin(gWin);
     delwin(dWin);
