@@ -53,7 +53,7 @@ void init();
 void debug();
 int isOver();
 int place(int, int, int, Orientation);
-void placeRandom();
+void placeRandom(unsigned int);
 int attack(int, int);
 
 #endif

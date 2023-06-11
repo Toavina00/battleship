@@ -136,9 +136,9 @@ int place(int shipId, int row, int col, Orientation o)
     return 1;
 }
 
-void placeRandom()
+void placeRandom(unsigned int seed)
 {
-    srand(time(NULL));
+    srand(seed);
     int i = 0, r, c, o;
     while (i < N_SHIPS)
     {

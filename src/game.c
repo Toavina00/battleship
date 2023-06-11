@@ -2,6 +2,7 @@
 
 int x, y;
 char buff[BUFFER_SIZE];
+char fb[BUFFER_SIZE];
 
 int handleInput()
 {
@@ -30,8 +31,11 @@ int handleInput()
     return -1;
 }
 
-int opponent()
+int opponent(int c_fd)
 {
+    memset(buff, 0, BUFFER_SIZE);
+
+    wlog("Waiting for the opponent");
 
     if (recv(c_fd, buff, BUFFER_SIZE, 0) < 0)
     {
@@ -56,27 +60,25 @@ int opponent()
         switch (attack(x, y))
         {
         case 0:
-            strcpy(buff, "Attack: Ship missed");
-            wlog(buff);
-            send(c_fd, buff, BUFFER_SIZE, 0);
+            strcpy(buff, " : Ship missed");
+            send(c_fd, buff, strlen(buff), 0);
             break;
         case 1:
-            strcpy(buff, "Attack: Ship hit");
-            wlog(buff);
-            send(c_fd, buff, BUFFER_SIZE, 0);
+            strcpy(buff, " : Ship hit");
+            send(c_fd, buff, strlen(buff), 0);
             break;
         case 2:
-            strcpy(buff, "Attack: Ship hit and sunk");
-            wlog(buff);
-            send(c_fd, buff, BUFFER_SIZE, 0);
+            strcpy(buff, " : Ship hit and sunk");
+            send(c_fd, buff, strlen(buff), 0);
             break;
         default:
             break;
         }
         if (isOver())
         {
+            strcpy(buff, ":w");
             wlog("Game Over: You Lost");
-            send(c_fd, ":w", BUFFER_SIZE, 0);
+            send(c_fd, ":w", strlen(buff), 0);
             getch();
             return 0;
         }
@@ -89,31 +91,32 @@ int opponent()
     return 1;
 }
 
-int player()
+int player(int sc_fd)
 {
-
-    wlog("Enter \":Q\" or coordinate");
+    memset(buff, 0, BUFFER_SIZE);
 
 Input:
+    wlog("Enter \":Q\" or coordinate");
     getInput(buff);
     switch (handleInput())
     {
     case 1:
         wlog("You're ending the game");
-        send(sc_fd, buff, BUFFER_SIZE, 0);
+        send(sc_fd, buff, strlen(buff), 0);
         getch();
         return 0;
         break;
 
     case 0:
-        send(sc_fd, buff, BUFFER_SIZE, 0);
+        memset(fb, 0, BUFFER_SIZE);
+        send(sc_fd, buff, strlen(buff), 0);
+        strcpy(fb, buff);
         recv(sc_fd, buff, BUFFER_SIZE, 0);
-        wlog(buff);
-        mvwgetch(iWin, 1, 1);
+        strcat(fb, buff);
+        wfb(fb);
         break;
 
     default:
-        wlog("Incorrect input");
         goto Input;
         break;
     }
@@ -131,11 +134,14 @@ int startServer(int port)
     init();
     initwin();
 
-    placeRandom();
+    placeRandom(time(NULL));
 
     while (TRUE)
     {
-        /*TODO*/
+        displayBoard();
+        if (!player(sc_fd)) break;
+        displayBoard();
+        if (!opponent(sc_fd)) break;
     }
 
     return 0;
@@ -151,11 +157,14 @@ int startClient(int port, const char *addr)
     init();
     initwin();
 
-    placeRandom();
+    placeRandom(time(NULL) + 1);
 
     while (TRUE)
     {
-        /*TODO*/
+        displayBoard();
+        if (!opponent(c_fd)) break;
+        displayBoard();
+        if (!player(c_fd)) break;
     }
 
     return 0;

@@ -3,6 +3,7 @@
 WINDOW* gWin; 
 WINDOW* dWin;
 WINDOW* iWin;
+WINDOW* fWin;
 
 int initwin() {
 
@@ -15,13 +16,18 @@ int initwin() {
     posx = (maxX - width)/2;
     gWin = newwin(height, width, 0, posx);
     dWin = newwin(3, width, height + 2, posx);
-    iWin = newwin(3, width, height + 6, posx);
+    fWin = newwin(3, width, height + 5, posx);
+    iWin = newwin(3, width, height + 9, posx);
 
     box(iWin, 0, 0);
 
     box(dWin, 0, 0);
     mvwprintw(dWin, 0, 1, "Info");
 
+    box(fWin, 0, 0);
+    mvwprintw(fWin, 0, 1, "Last Move");
+
+    wrefresh(fWin);
     wrefresh(iWin);
     wrefresh(dWin);
     refresh();
@@ -82,6 +88,13 @@ void wlog(char* text) {
     mvwprintw(dWin, 0, 1, "Info");
     mvwprintw(dWin, 1, 1, text);
     wrefresh(dWin);
+}
+
+void wfb(char* text) {
+    clearWin(fWin);
+    mvwprintw(fWin, 0, 1, "Last Move");
+    mvwprintw(fWin, 1, 1, text);
+    wrefresh(fWin);
 }
 
 void getInput(char* buffer) {

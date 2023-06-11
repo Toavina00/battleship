@@ -8,6 +8,7 @@
 
 extern int x, y;
 extern char buff[BUFFER_SIZE];
+extern char fb[BUFFER_SIZE];
 
 int startServer(int port);
 int startClient(int port, const char *addr);
