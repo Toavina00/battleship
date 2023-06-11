@@ -1,6 +1,6 @@
 CC = gcc
-Lib = -lncurses
+LIB = -lncurses
+INC = -Iinclude
 
-game: 
-	$(CC) -o $@ src/*.c $(Lib)
-	
+game:
+	$(CC) -o $@ src/*.c $(LIB) $(INC)
