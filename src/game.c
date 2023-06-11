@@ -33,15 +33,13 @@ int handleInput()
 int opponent()
 {
 
-    int d_size = recv(c_fd, buff, BUFFER_SIZE, 0);
     if (recv(c_fd, buff, BUFFER_SIZE, 0) < 0)
     {
         perror("Error on receiving data\n");
         return 1;
     }
-    buff[d_size] = '\0';
 
-    switch (handleInput(buff, &x, &y))
+    switch (handleInput())
     {
     case 1:
         wlog("The opponent ended the game");
@@ -98,7 +96,7 @@ int player()
 
 Input:
     getInput(buff);
-    switch (handleInput(buff, &x, &y))
+    switch (handleInput())
     {
     case 1:
         wlog("You're ending the game");
@@ -142,7 +140,6 @@ int startServer(int port)
 
     return 0;
 }
-
 
 int startClient(int port, const char *addr)
 {
