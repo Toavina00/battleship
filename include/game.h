@@ -1,16 +1,15 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include "window.h"
+#include "server.h"
+#include "client.h"
 
-static int c_fd, x, y;
-static char buff[512];
+#define BUFFER_SIZE 512
 
-int pTurn();
-int oTurn();
+extern int x, y;
+extern char buff[BUFFER_SIZE];
+
+int startServer(int port);
+int startClient(int port, const char *addr);
 
 #endif

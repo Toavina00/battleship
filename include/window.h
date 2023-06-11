@@ -3,13 +3,14 @@
 
 #include "piece.h"
 
-static WINDOW* gWin; 
-static WINDOW* dWin;
-static WINDOW* iWin;
+extern WINDOW *gWin;
+extern WINDOW *dWin;
+extern WINDOW *iWin;
 
 int initwin();
-int handleInput(char* msg, int* x, int* y);
-int getInput(char* buffer);
-void wlog(char* text);
+void freewin();
+void displayBoard();
+void getInput(char *buffer);
+void wlog(char *text);
 
 #endif

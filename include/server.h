@@ -1,11 +1,15 @@
 #ifndef SERVER_H
 #define SERVER_H
 
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include "window.h"
 
-#include "game.h"
+extern int s_fd;
+extern int sc_fd;
 
-static int s_fd;
-
-int startServer(int port);
+int createServer(int port);
+void closeServer();
 
 #endif

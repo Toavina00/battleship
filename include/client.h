@@ -1,8 +1,13 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#include <game.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include "window.h"
 
-int startClient(int port, const char* addr);
+extern int c_fd;
+
+int createClient(int port, const char *addr);
 
 #endif

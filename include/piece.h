@@ -7,25 +7,31 @@
 #include <ncurses.h>
 #include <string.h>
 
-#define N_SHIPS    5
-#define N_PARTS    17
-#define DIMENSION  10
+#define N_SHIPS 5
+#define N_PARTS 17
+#define DIMENSION 10
 
 /*-------------------*/
 //  Data Structures  //
 /*-------------------*/
 
-typedef enum Orientation {
-    UP, DOWN, RIGHT, LEFT
+typedef enum Orientation
+{
+    UP,
+    DOWN,
+    RIGHT,
+    LEFT
 } Orientation;
 
-typedef struct Ship {
+typedef struct Ship
+{
     int id;
     int length;
     int offset;
-}Ship;
+} Ship;
 
-typedef struct Part {
+typedef struct Part
+{
     int id;
     int ownerId;
 } Part;
@@ -34,20 +40,20 @@ typedef struct Part {
 //    Game Pieces    //
 /*-------------------*/
 
-static Ship SHIPS[N_SHIPS];
-static Part PARTS[N_PARTS];
+extern Ship SHIPS[N_SHIPS];
+extern Part PARTS[N_PARTS];
 
-static int BOARD[DIMENSION][DIMENSION];
+extern int BOARD[DIMENSION][DIMENSION];
 
 /*-------------------*/
 //   Game Functions  //
 /*-------------------*/
 
 void init();
+void debug();
 int isOver();
 int place(int, int, int, Orientation);
 void placeRandom();
-void displayBoard(WINDOW*);
 int attack(int, int);
 
 #endif

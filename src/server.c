@@ -1,5 +1,8 @@
 #include "server.h"
 
+int s_fd;
+int sc_fd;
+
 int createServer(int port)
 {
 
@@ -31,7 +34,7 @@ int createServer(int port)
     }
 
     int addrlen = sizeof(client_addr);
-    if ((c_fd = accept(s_fd, (struct sockaddr *)&client_addr, (socklen_t *)&addrlen)) < 0)
+    if ((sc_fd = accept(s_fd, (struct sockaddr *)&client_addr, (socklen_t *)&addrlen)) < 0)
     {
         perror("Socket connection");
         return -1;
@@ -40,32 +43,7 @@ int createServer(int port)
     return 0;
 }
 
-int startServer(int port)
+void closeServer()
 {
-
-    if (createServer(port) != 0)
-        return -1;
-
-    init();
-    placeRandom();
-    initwin();
-
-    while (true)
-    {
-        displayBoard(gWin);
-        if (!pTurn())
-            break;
-        displayBoard(gWin);
-        if (!oTurn())
-            break;
-    }
-
-    delwin(gWin);
-    delwin(dWin);
-    delwin(iWin);
-    endwin();
-
     shutdown(s_fd, SHUT_RDWR);
-
-    return 0;
 }

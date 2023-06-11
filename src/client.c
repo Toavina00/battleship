@@ -1,5 +1,7 @@
 #include "client.h"
 
+int c_fd;
+
 int createClient(int port, const char *addr)
 {
 
@@ -20,34 +22,6 @@ int createClient(int port, const char *addr)
         perror("Client connection\n");
         return -1;
     }
-
-    return 0;
-}
-
-int startClient(int port, const char *addr)
-{
-
-    if (createClient(port, addr) != 0)
-        return -1;
-
-    init();
-    placeRandom();
-    initwin();
-
-    while (true)
-    {
-        displayBoard(gWin);
-        if (!oTurn())
-            break;
-        displayBoard(gWin);
-        if (!pTurn())
-            break;
-    }
-
-    delwin(gWin);
-    delwin(dWin);
-    delwin(iWin);
-    endwin();
 
     return 0;
 }

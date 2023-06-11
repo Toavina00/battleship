@@ -1,5 +1,9 @@
 #include "window.h"
 
+WINDOW* gWin; 
+WINDOW* dWin;
+WINDOW* iWin;
+
 int initwin() {
 
     initscr();
@@ -10,13 +14,45 @@ int initwin() {
 
     posx = (maxX - width)/2;
     gWin = newwin(height, width, 0, posx);
-    dWin = newwin(3, width, height + 3, posx);
-    iWin = newwin(3, width, height + 9, posx);
+    dWin = newwin(3, width, height + 2, posx);
+    iWin = newwin(3, width, height + 6, posx);
 
     box(iWin, 0, 0);
 
     box(dWin, 0, 0);
     mvwprintw(dWin, 0, 1, "Info");
+
+    wrefresh(iWin);
+    wrefresh(dWin);
+    refresh();
+
+}
+
+void displayBoard() {
+
+    for (int i = 0; i < DIMENSION; i++) {
+        for (int j = 0; j < DIMENSION; j++) {
+            int n = BOARD[i][j];
+            printf("%i", n);
+            mvwprintw(gWin, 1+i, 1+3*j, " %i ", n);
+            if (BOARD[i][j] == 20) {
+                mvwprintw(gWin, 1+i, 1+3*j, "   ");
+            }
+            else if (BOARD[i][j] == -20) {
+                mvwprintw(gWin, 1+i, 1+3*j, " X ");
+            }
+            else if (BOARD[i][j] >= 1 && BOARD[i][j] <= N_PARTS) {
+                wattron(gWin, A_REVERSE);
+                mvwprintw(gWin, 1+i, 1+3*j, "   ");
+                wattroff(gWin, A_REVERSE);
+            }
+            else {
+                wattron(gWin, A_REVERSE);
+                mvwprintw(gWin, 1+i, 1+3*j, " X ");
+                wattroff(gWin, A_REVERSE);
+            }
+        }
+    }
 
     box(gWin, 0, 0);
     for (int i = 0; i < DIMENSION; i++) {
@@ -26,11 +62,14 @@ int initwin() {
         mvwprintw(gWin, 1+i, 0, "%c", '0' + i );
     }
 
-    wrefresh(iWin);
     wrefresh(gWin);
-    wrefresh(dWin);
-    refresh();
+}
 
+void freewin() {
+    delwin(gWin);
+    delwin(dWin);
+    delwin(iWin);
+    endwin();
 }
 
 void clearWin(WINDOW* win) {
@@ -45,35 +84,7 @@ void wlog(char* text) {
     wrefresh(dWin);
 }
 
-
-int handleInput(char* msg, int* x, int* y) {    
-
-    if (msg[2] == '\0') 
-        return -1;
-    else if (msg[0] == ':') {
-        if (msg[1] == 'q' || msg[1] == 'Q') {
-            return 1;
-        } else if (msg[1] == 'w' || msg[1] == 'W') {
-            return 2;
-        }
-    }
-    else if ( (msg[0] <= 'z' && msg[0] >= 'a') || (msg[0] <= 'Z' && msg[0] >= 'A') ) 
-        if (msg[1] <= '9' && msg[1] >= '0') {
-            if (x == NULL || y == NULL) return 0;
-            *x = msg[0];
-            *x -= (*x <= 'J')?'A':'a';
-            *y = msg[1] - '0'; 
-            return 0;
-        }
-    return -1;
-}
-
-
-int getInput(char* buffer) {
+void getInput(char* buffer) {
     clearWin(iWin);
     mvwgetstr(iWin, 1, 1, buffer);
-    
-    int out = handleInput(buffer, NULL, NULL);
-
-    return (out == 2)?-1:out;
 }
